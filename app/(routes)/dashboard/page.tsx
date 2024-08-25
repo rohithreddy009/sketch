@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import { Button } from '@/components/ui/button'
 import { api } from '@/convex/_generated/api'
 import { LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
@@ -9,51 +9,53 @@ import FileList from './_components/FileList'
 import AdBanner from './../../_components/AdBanner'
 
 function Dashboard() {
-  const convex = useConvex();
-  const { user }: any = useKindeBrowserClient();
-  const createUser = useMutation(api.user.createUser);
+    const convex = useConvex()
+    const { user }: any = useKindeBrowserClient()
+    const createUser = useMutation(api.user.createUser)
 
-  useEffect(() => {
-    if (user) {
-      checkUser();
+    useEffect(() => {
+        if (user) {
+            checkUser()
+        }
+    }, [user])
+
+    const checkUser = async () => {
+        const result = await convex.query(api.user.getUser, {
+            email: user?.email,
+        })
+        if (!result?.length) {
+            createUser({
+                name: user.given_name,
+                email: user.email,
+                image: user.picture,
+            }).then((resp) => {
+                console.log(resp)
+            })
+        }
     }
-  }, [user]);
 
-  const checkUser = async () => {
-    const result = await convex.query(api.user.getUser, { email: user?.email });
-    if (!result?.length) {
-      createUser({
-        name: user.given_name,
-        email: user.email,
-        image: user.picture
-      }).then((resp) => {
-        console.log(resp);
-      });
-    }
-  }
+    return (
+        <div className="min-h-screen bg-gray-100 p-6">
+            {/* Header Section */}
+            <div className="mb-4">
+                <Header />
+            </div>
 
-  return (
-    <div className='min-h-screen bg-gray-100 p-6'>
-      {/* Header Section */}
-      <div className='mb-4'>
-        <Header />
-      </div>
+            {/* Main Content */}
+            <div className="flex flex-col gap-6">
+                <FileList />
 
-      {/* Main Content */}
-      <div className='flex flex-col gap-6'>
-        <FileList />
-        
-        {/* Ad Banner Section */}
-        <div className='mt-6'>
-          <AdBanner
-            data-ad-slot="4796371341"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
+                {/* Ad Banner Section */}
+                <div className="mt-6">
+                    <AdBanner
+                        data-ad-slot="4796371341"
+                        data-ad-format="auto"
+                        data-full-width-responsive="true"
+                    />
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  )
+    )
 }
 
-export default Dashboard;
+export default Dashboard
