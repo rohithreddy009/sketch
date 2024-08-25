@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+// @ts-ignore
 import EditorJS from '@editorjs/editorjs';
+// @ts-ignore
 import Header from '@editorjs/header';
 import List from '@editorjs/list';
+// @ts-ignore
 import Checklist from '@editorjs/checklist';
+// @ts-ignore
 import Paragraph from '@editorjs/paragraph';
+// @ts-ignore
 import Warning from '@editorjs/warning';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -55,6 +60,7 @@ function Editor({ onSaveTrigger, fileId, fileData }: { onSaveTrigger: any, fileI
     const editor = new EditorJS({
       tools: {
         header: {
+          // @ts-ignore
           class: Header,
           shortcut: 'CMD+SHIFT+H',
           config: {
@@ -62,6 +68,7 @@ function Editor({ onSaveTrigger, fileId, fileData }: { onSaveTrigger: any, fileI
           },
         },
         list: {
+          // @ts-ignore
           class: List,
           inlineToolbar: true,
           config: {
