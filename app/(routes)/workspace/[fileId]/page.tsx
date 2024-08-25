@@ -8,39 +8,46 @@ import { FILE } from '../../dashboard/_components/FileList';
 import Canvas from '../_components/Canvas';
 
 function Workspace({params}:any) {
-   const [triggerSave,setTriggerSave]=useState(false);
-   const convex=useConvex();
-   const [fileData,setFileData]=useState<FILE|any>();
-   useEffect(()=>{
-    console.log("FILEID",params.fileId)
-    params.fileId&&getFileData();
-   },[])
+  const [triggerSave, setTriggerSave] = useState(false);
+  const [focusedSide, setFocusedSide] = useState('both'); // 'both', 'document', or 'canvas'
+  const convex = useConvex();
+  const [fileData, setFileData] = useState<FILE|any>();
 
-   const getFileData=async()=>{
-    const result=await convex.query(api.files.getFileById,{_id:params.fileId})
+  useEffect(() => {
+    console.log("FILEID", params.fileId)
+    params.fileId && getFileData();
+  }, [])
+
+  const getFileData = async () => {
+    const result = await convex.query(api.files.getFileById, {_id: params.fileId})
     setFileData(result);
   }
-  return (
-    <div>
-      <WorkspaceHeader onSave={()=>setTriggerSave(!triggerSave)} />
 
-      {/* Workspace Layout  */}
-      <div className='grid grid-cols-1
-      md:grid-cols-2'>
-        {/* Document  */}
-          <div className=' h-screen'>
-            <Editor onSaveTrigger={triggerSave}
+  const toggleFocus = (side: 'both' | 'document' | 'canvas') => {
+    setFocusedSide(side);
+  }
+
+  return (
+    <div className="flex flex-col h-screen">
+      <WorkspaceHeader 
+        onSave={() => setTriggerSave(!triggerSave)} 
+        onToggleFocus={toggleFocus}
+        focusedSide={focusedSide}
+      />
+      <div className={`flex-grow flex ${focusedSide === 'both' ? 'md:flex-row' : 'flex-col'}`}>
+        <div className={`${focusedSide === 'canvas' ? 'hidden' : 'flex-1'} overflow-auto`}>
+          <Editor
+            onSaveTrigger={triggerSave}
             fileId={params.fileId}
             fileData={fileData}
-            />
-          </div>
-        {/* Whiteboard/canvas  */}
-        <div className=' h-screen border-l'>
-            <Canvas
-             onSaveTrigger={triggerSave}
-             fileId={params.fileId}
-             fileData={fileData}
-            />
+          />
+        </div>
+        <div className={`${focusedSide === 'document' ? 'hidden' : 'flex-1'} overflow-auto border-l`}>
+          <Canvas
+            onSaveTrigger={triggerSave}
+            fileId={params.fileId}
+            fileData={fileData}
+          />
         </div>
       </div>
     </div>

@@ -56,6 +56,7 @@ function Editor({onSaveTrigger,fileId,fileData}:{onSaveTrigger:any,fileId:any,fi
 
             tools:{
                 header: {
+                  // @ts-ignore
                     class: Header,
                     shortcut: 'CMD+SHIFT+H',
                     config:{
@@ -63,6 +64,7 @@ function Editor({onSaveTrigger,fileId,fileData}:{onSaveTrigger:any,fileId:any,fi
                     }
                   },
                   list: {
+                    // @ts-ignore
                     class: List,
                     inlineToolbar: true,
                     config: {
